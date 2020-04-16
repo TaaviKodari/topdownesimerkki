@@ -23,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
     Color originalColor;
     Rigidbody2D _rb2D;
     Animator _anime;
+    private AnimatorClipInfo[] clipInfo;
+
     bool _isFiring;
     bool _canLaunch = true;
     private float holdDownStartTimer;
@@ -161,10 +163,16 @@ public class PlayerMovement : MonoBehaviour
                 _anime.SetFloat("MoveX", _rb2D.velocity.x);
                 _anime.SetFloat("MoveY", _rb2D.velocity.y);
 
+                CheckMoveDirection();
+
                 if (Input.GetAxisRaw("Horizontal") == 1 || Input.GetAxisRaw("Horizontal") == -1 || Input.GetAxisRaw("Vertical") == 1 || Input.GetAxisRaw("Vertical") == -1)
                 {
                     _anime.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));
                     _anime.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
+                    //tallennetaan meidän kaiki animaatio clipit ja otetaan ensimmäinen clip ja tallennetaan se
+                    clipInfo = _anime.GetCurrentAnimatorClipInfo(0);
+
+                    UpdatePlayerLookDirection(clipInfo[0].clip.name);
                 }
 
                 break;
@@ -198,9 +206,61 @@ public class PlayerMovement : MonoBehaviour
             case PlayerMode.Die:
 
                 break;
-        } 
+        }
+
+        Debug.Log(lookDir);
     }
 
+    private void CheckMoveDirection()
+    {
+        if(_rb2D.velocity.x < 0)
+        {
+            SetPlayerLookDir(PlayerLookDir.Left);
+        }
+
+        if(_rb2D.velocity.x > 0)
+        {
+            SetPlayerLookDir(PlayerLookDir.Right);
+        }
+
+        if(_rb2D.velocity.y < 0)
+        {
+            SetPlayerLookDir(PlayerLookDir.Down);
+        }
+
+        if(_rb2D.velocity.y > 0)
+        {
+            SetPlayerLookDir(PlayerLookDir.Up);
+        }
+    }
+
+    public void UpdatePlayerLookDirection(string animation_name)
+    {
+        switch(animation_name)
+        {
+            //alaspäin katsominen
+            case "player-idle_down":
+                SetPlayerLookDirection(PlayerLookDir.Down);
+                break;
+
+            case "idle_left_player":
+                SetPlayerLookDirection(PlayerLookDir.Left);
+                break;
+
+            case "idle_up_player":
+                SetPlayerLookDirection(PlayerLookDir.Up);
+                break;
+
+            case "idle_right_player":
+                SetPlayerLookDirection(PlayerLookDir.Right);
+                break;
+        }
+    }
+
+    private void SetPlayerLookDirection(PlayerLookDir newLookDir)
+    {
+        lookDir = newLookDir;
+    }
 
     public void SetPlayerMode(PlayerMode newMode)
     {
@@ -212,6 +272,10 @@ public class PlayerMovement : MonoBehaviour
         lookDir = newLookDir;
     }
 
+    public PlayerLookDir GetCurrentLookDirection()
+    {
+        return lookDir;
+    }
 
     public void ChangeColor(Color newColor)
     {
