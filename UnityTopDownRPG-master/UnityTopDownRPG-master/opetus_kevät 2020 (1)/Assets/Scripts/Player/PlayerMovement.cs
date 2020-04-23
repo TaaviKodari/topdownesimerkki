@@ -270,6 +270,7 @@ public class PlayerMovement : MonoBehaviour
     public void SetPlayerLookDir(PlayerLookDir newLookDir)
     {
         lookDir = newLookDir;
+        //Player.Instance.SetPlayerLookdirection();
     }
 
     public PlayerLookDir GetCurrentLookDirection()
