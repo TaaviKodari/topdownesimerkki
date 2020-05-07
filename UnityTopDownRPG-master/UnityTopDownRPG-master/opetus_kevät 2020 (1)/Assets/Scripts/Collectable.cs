@@ -15,7 +15,6 @@ public class Collectable : MonoBehaviour
 
         if (collision.gameObject.tag == "Player")
         {
-            Debug.Log("Lul");
             GameManager.Instance.RemoveCollatableOnList(gameObject);
             Destroy(gameObject);
         }

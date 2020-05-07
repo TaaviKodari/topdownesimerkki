@@ -208,7 +208,7 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
 
-        Debug.Log(lookDir);
+        //Debug.Log(lookDir);
     }
 
     private void CheckMoveDirection()
